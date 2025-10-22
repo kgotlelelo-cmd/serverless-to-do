@@ -20,10 +20,10 @@ const getUserService = async (email) => {
 
     const command = new QueryCommand(params);
     const response = await docClient.send(command);
-    if (response.Items.length === 0) {
+    if (response?.Items?.length === 0) {
         return null;
     }
-    return response.Items[0];
+    return response?.Items[0];
 }
 
 const createUserService = async (name, email) => {

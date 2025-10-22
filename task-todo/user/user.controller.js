@@ -11,7 +11,7 @@ const getUserController = async (req, res) => {
         const { userId, name } = user;
         res.json({ userId, name });
     } catch (error) {
-        res.status(500).json({ error: "Could not retrieve user" });
+        res.status(500).json({ error: error.message || "Could not retrieve user" });
     }
 }
 

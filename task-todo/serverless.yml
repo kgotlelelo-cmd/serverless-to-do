@@ -25,6 +25,8 @@ provider:
           Resource:
             - Fn::GetAtt: [UsersTable, Arn]
             - Fn::GetAtt: [TasksTable, Arn]
+            - !Sub "${UsersTable.Arn}/index/*"
+            - !Sub "${TasksTable.Arn}/index/*"
   environment:
     USERS_TABLE: ${param:tableNameUsers}
     TASKS_TABLE: ${param:tableNameTasks}
@@ -36,12 +38,10 @@ functions:
     - httpApi:
         path: /user
         method: any
-        cors: true
     
     - httpApi:
         path: /user/{proxy+}
         method: any
-        cors: true
     
   task:
     handler: task/handler.handler
@@ -49,12 +49,10 @@ functions:
     - httpApi:
         path: /task
         method: any
-        cors: true
     
     - httpApi:
         path: /task/{proxy+}
         method: any
-        cors: true
 
 resources:
   Resources:
