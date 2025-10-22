@@ -1,0 +1,102 @@
+org: okiro
+service: task-todo
+
+stages:
+  default:
+    params:
+      tableNameUsers: "users-table-${sls:stage}"
+      tableNameTasks: "tasks-table-${sls:stage}"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::GetAtt: [TasksTable, Arn]
+  environment:
+    USERS_TABLE: ${param:tableNameUsers}
+    TASKS_TABLE: ${param:tableNameTasks}
+
+functions:
+  user:
+    handler: user/handler.handler
+    events:
+    - httpApi:
+        path: /user
+        method: any
+        cors: true
+    
+    - httpApi:
+        path: /user/{proxy+}
+        method: any
+        cors: true
+    
+  task:
+    handler: task/handler.handler
+    events:
+    - httpApi:
+        path: /task
+        method: any
+        cors: true
+    
+    - httpApi:
+        path: /task/{proxy+}
+        method: any
+        cors: true
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: emailIndex
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:tableNameUsers}
+    TasksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: taskId
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: taskId
+            KeyType: HASH
+          - AttributeName: userId
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: userIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:tableNameTasks}
