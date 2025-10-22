@@ -10,10 +10,10 @@ const {
 
 const TASKS_TABLE = process.env.TASKS_TABLE;
 
-const getTaskService = async (taskId) => {
+const getTaskService = async (taskId, userId) => {
     const params = {
         TableName: TASKS_TABLE,
-        Key: { taskId }
+        Key: { taskId, userId }
     }
 
     const command = new GetCommand(params);
@@ -58,18 +58,18 @@ const getTasksByUserService = async (userId) => {
 }
 
 
-const deleteTaskService = async (taskId) => {
+const deleteTaskService = async (taskId, userId) => {
     const params = {
         TableName: TASKS_TABLE,
-        Key: { taskId }
+        Key: { taskId, userId }
     }
 
     const command = new DeleteCommand(params);
     await docClient.send(command);
-    return { taskId };
+    return { taskId, userId };
 }
 
-const editTaskService = async (taskId, title, description) => {
+const editTaskService = async (taskId, userId, title, description) => {
 
     const updateExpressions = [];
     const expressionAttributeValues = {};
@@ -89,7 +89,7 @@ const editTaskService = async (taskId, title, description) => {
 
     const params = {
         TableName: TASKS_TABLE,
-        Key: { taskId },
+        Key: { taskId, userId },
         UpdateExpression: 'SET ' + updateExpressions.join(', '),
         ExpressionAttributeValues: expressionAttributeValues,
         ReturnValues: 'ALL_NEW'

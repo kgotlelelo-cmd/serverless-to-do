@@ -1,3 +1,4 @@
+const e = require('express');
 const {
     getTaskService,
     createTaskService,
@@ -8,16 +9,16 @@ const {
 
 
 const getTaskController = async (req, res) => {
-    const { taskId } = req.params;
+    const { taskId, userId } = req.params;
 
     try {
-        const task = await getTaskService(taskId);
+        const task = await getTaskService(taskId, userId);
         if (!task) {
             return res.status(404).json({ error: 'Task not found' });
         }
         res.status(200).json(task);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: error.message || 'Internal Server Error' });
     }
 }
 
@@ -33,7 +34,7 @@ const createTaskController = async (req, res) => {
         const newTask = await createTaskService(userId, title, description);
         res.status(201).json(newTask);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: error.message || 'Internal Server Error' });
     }
 }
 
@@ -44,27 +45,27 @@ const getTasksByUserController = async (req, res) => {
         const tasks = await getTasksByUserService(userId);
         res.status(200).json(tasks);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: error.message || 'Internal Server Error' });
     }
 }
 
 
 const deleteTaskController = async (req, res) => {
-    const { taskId } = req.params;
+    const { taskId, userId } = req.params;
 
     try {
-        const deletedTask = await deleteTaskService(taskId);
+        const deletedTask = await deleteTaskService(taskId, userId);
         if (!deletedTask) {
             return res.status(404).json({ error: 'Task not found' });
         }
         res.status(200).json(deletedTask);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: error.message || 'Internal Server Error' });
     }
 }
 
 const editTaskController = async (req, res) => {
-    const { taskId } = req.params;
+    const { taskId, userId } = req.params;
     const { title, description } = req.body;
 
     if (!title && !description) {
@@ -72,13 +73,13 @@ const editTaskController = async (req, res) => {
     }
 
     try {
-        const updatedTask = await editTaskService(taskId, title, description);
+        const updatedTask = await editTaskService(taskId, userId, title, description);
         if (!updatedTask) {
             return res.status(404).json({ error: 'Task not found' });
         }
         res.status(200).json(updatedTask);
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: error.message || 'Internal Server Error' });
     }
 }
 

@@ -13,11 +13,11 @@ const serverless = require("serverless-http");
 const app = express();
 app.use(express.json());
 
-app.get("/task/:taskId", getTaskController);
+app.get("/task/:taskId/:userId", getTaskController);
 app.post("/task", createTaskController);
 app.get("/task/user/:userId", getTasksByUserController);
-app.delete("/task/:taskId", deleteTaskController);
-app.put("/task/:taskId", editTaskController);
+app.delete("/task/:taskId/:userId", deleteTaskController);
+app.put("/task/:taskId/:userId", editTaskController);
 
 
 app.use((req, res, next) => {
