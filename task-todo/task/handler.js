@@ -13,9 +13,9 @@ const serverless = require("serverless-http");
 const app = express();
 app.use(express.json());
 
+app.get("/task/user/:userId", getTasksByUserController);
 app.get("/task/:taskId/:userId", getTaskController);
 app.post("/task", createTaskController);
-app.get("/task/user/:userId", getTasksByUserController);
 app.delete("/task/:taskId/:userId", deleteTaskController);
 app.put("/task/:taskId/:userId", editTaskController);
 

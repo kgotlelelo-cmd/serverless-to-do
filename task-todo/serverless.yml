@@ -8,6 +8,8 @@ stages:
       tableNameTasks: "tasks-table-${sls:stage}"
 
 provider:
+  httpApi:
+    cors: true
   name: aws
   runtime: nodejs20.x
   region: us-east-1

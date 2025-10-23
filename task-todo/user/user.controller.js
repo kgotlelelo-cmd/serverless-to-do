@@ -11,7 +11,7 @@ const getUserController = async (req, res) => {
         const { userId, name } = user;
         res.json({ userId, name });
     } catch (error) {
-        res.status(500).json({ error: error.message || "Could not retrieve user" });
+        res.status(500).json({ error: error?.message || "Could not retrieve user" });
     }
 }
 
@@ -29,7 +29,7 @@ const createUserController = async (req, res) => {
         const user = await createUserService(name, email);
         res.json(user);
     } catch (error) {
-        res.status(500).json({ error: "Could not create user" });
+        res.status(500).json({ error: error?.message || 'unable to create a user' });
     }
 }
 

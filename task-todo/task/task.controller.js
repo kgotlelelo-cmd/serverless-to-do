@@ -18,7 +18,7 @@ const getTaskController = async (req, res) => {
         }
         res.status(200).json(task);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Internal Server Error' });
+        res.status(500).json({ error: error?.message || 'Internal Server Error' });
     }
 }
 
@@ -34,7 +34,7 @@ const createTaskController = async (req, res) => {
         const newTask = await createTaskService(userId, title, description);
         res.status(201).json(newTask);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Internal Server Error' });
+        res.status(500).json({ error: error?.message || 'Internal Server Error' });
     }
 }
 
@@ -45,7 +45,7 @@ const getTasksByUserController = async (req, res) => {
         const tasks = await getTasksByUserService(userId);
         res.status(200).json(tasks);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Internal Server Error' });
+        res.status(500).json({ error: error?.message || 'Internal Server Error' });
     }
 }
 
@@ -60,7 +60,7 @@ const deleteTaskController = async (req, res) => {
         }
         res.status(200).json(deletedTask);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Internal Server Error' });
+        res.status(500).json({ error: error?.message || 'Internal Server Error' });
     }
 }
 
@@ -79,7 +79,7 @@ const editTaskController = async (req, res) => {
         }
         res.status(200).json(updatedTask);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Internal Server Error' });
+        res.status(500).json({ error: error?.message || 'Internal Server Error' });
     }
 }
 
